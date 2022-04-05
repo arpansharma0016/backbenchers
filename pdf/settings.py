@@ -16,7 +16,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'affiliator.in@gmail.com'
-EMAIL_HOST_PASSWORD = 'wffazrivjtjheznh'
+EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 587
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -135,9 +135,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, "assets")
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-AWS_ACCESS_KEY_ID = 'AKIAQUXCFQS57RO72PES'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'mediafiles-arpan'
 
 AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = None
