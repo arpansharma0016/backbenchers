@@ -1,0 +1,134 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'ui/css/aos.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/bootstrap-grid.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/bootstrap-reboot.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/bootstrap-utilities.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/glightbox.min.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/tiny-slider.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/bootstrap/bootstrap-reboot.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/components/_site-blocks.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/fonts/css/all.css' %}">
+    <link rel="icon" href="{% static 'logo.png' %}" type="image/icon type">
+
+    <title>{{query}} &mdash; BackBenchers</title>
+</head>
+
+<body>
+    <div style="position: fixed;top: 80vh; left: 10vh;" id="notification">
+    </div>
+    <div class="site-mobile-menu site-navbar-target">
+        <div class="site-mobile-menu-header">
+            <div class="site-mobile-menu-close">
+                <span class="icofont-close js-menu-toggle"></span>
+            </div>
+        </div>
+        <div class="site-mobile-menu-body"></div>
+    </div>
+    <nav class="site-nav">
+        <div class="container">
+            <div class="site-navigation">
+                <div class="row">
+                    <div class="col-md-6 text-center order-1 order-md-2 mb-3 mb-md-0">
+                        <a href="/" class="logo m-0 text-uppercase">BackBenchers</a>
+                    </div>
+                    <div class="col-md-3 order-3 order-md-1">
+                        <form action="/search" class="search-form">
+                            <span class="icon-search2"></span>
+                            <input type="search" class="form-control" name="query" placeholder="Search...">
+                        </form>
+                    </div>
+                    <div class="col-md-3 text-end order-2 order-md-3 mb-3 mb-md-0">
+                        <div class="d-flex">
+                            <ul class="list-unstyled social me-auto">
+                                {% if request.user.is_authenticated %}
+                                <li><a href="/me"><i class="fas fa-home"></i></a></li>
+                                <li><a href="/me/create"><i class="fas fa-plus-circle"></i></a></li>
+                                <li><a href="/me/bookmarks"><i class="far fa-bookmark"></i></a></li>
+                                <li><a href="/logout"><i class="fas fa-sign-out-alt"></i></a></li>
+                                {% else %}
+                                <li><a href="/login" class="btn btn-primary">Login</a></li>
+                                <li><a href="/register" class="btn btn-primary">Register</a></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="section pt-5 pb-0">
+        <div class="container">
+            {% if ue %}
+            <div class="row mb-5 justify-content-center">
+                <div class="col-lg-9">
+                    <span class="fw-normal text-uppercase d-block mb-1">Users</span>
+                    <h2 class="heading">'{{query}}'</h2>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                {% for user in users %}
+                <div class="col-lg-9">
+                    <a href="/{{user.username}}" class="post-author d-flex align-items-center">
+                        <div class="image--container" style="float: left; margin-top: 1em;">
+                            {% if user.image %}
+                            <img src="https://mediafiles-arpan.s3.ap-south-1.amazonaws.com/{{user.image}}" style="width: 6em;height: 6em; border-radius: 50%; object-fit: cover; margin-left: 1.8em; margin-right: 2em;"> {% else %}
+                            <p data-letters="{{user.first_name.0}}"></p>
+                            {% endif %}
+                        </div>
+                        <div class="text">
+                            <strong class="logo">{{user.first_name}}</strong> {% if user.bio %}
+                            <p class="fw-normal" style="color: black; margin-top: 0.2em;">{{user.bio|truncatechars:120}}</p>
+                            {% endif %}
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="row mb-5 justify-content-center">
+                <div class="col-lg-9">
+                    <span class="fw-normal text-uppercase d-block mb-1">No results for</span>
+                    <h2 class="heading">'{{query}}'</h2>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="site-footer">
+        <div class="container">
+            <div class="row justify-content-center copyright">
+                <div class="col-lg-7 text-center">
+                    <div class="widget">
+                        <p>Copyright &copy;
+                            <script>
+                                document.write(new Date().getFullYear());
+                            </script> All rights reserved
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="{% static 'ui/js/bootstrap.bundle.min.js' %}"></script>
+        <script src="{% static 'ui/js/tiny-slider.js' %}"></script>
+        <script src="{% static 'ui/js/glightbox.min.js' %}"></script>
+        <script src="{% static 'ui/js/aos.js' %}"></script>
+        <script src="{% static 'ui/js/navbar.js' %}"></script>
+        <script src="{% static 'ui/js/custom.js' %}"></script>
+
+
+</body>
+
+</html>

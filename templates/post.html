@@ -1,0 +1,269 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'modal/modal.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/aos.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/bootstrap-grid.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/bootstrap-reboot.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/bootstrap-utilities.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/glightbox.min.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/tiny-slider.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/bootstrap/bootstrap-reboot.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/components/_site-blocks.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/fonts/css/all.css' %}">
+    <link rel="icon" href="{% static 'logo.png' %}" type="image/icon type">
+
+    <title>{{post.heading}} &mdash; {{mee.first_name}} </title>
+    <style>
+        .site-mobile-menu {
+            width: 400px;
+        }
+        
+        .pdff {
+            height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+            overflow-y: scroll;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="site-mobile-menu site-navbar-target">
+        <div class="site-mobile-menu-header">
+            <div class="site-mobile-menu-close">
+                <span class="icofont-close js-menu-toggle"></span>
+            </div>
+        </div>
+        <div class="site-mobile-menu-body"></div>
+    </div>
+
+    <nav class="site-nav">
+        <div class="container">
+            <div class="site-navigation">
+                <div class="row">
+                    <div class="col-md-6 text-center order-1 order-md-2 mb-3 mb-md-0">
+                        <a href="/" class="logo m-0 text-uppercase">BackBenchers</a>
+                    </div>
+                    <div class="col-md-3 order-3 order-md-1">
+                        <form action="/search" class="search-form">
+                            <span class="icon-search2"></span>
+                            <input type="search" class="form-control" name="query" placeholder="Search...">
+                        </form>
+                    </div>
+                    <div class="col-md-3 text-end order-2 order-md-3 mb-3 mb-md-0">
+                        <div class="d-flex">
+                            <ul class="list-unstyled social me-auto">
+                                {% if request.user.is_authenticated %}
+                                <li><a href="/me"><i class="fas fa-home"></i></a></li>
+                                <li><a href="/me/create"><i class="fas fa-plus-circle"></i></a></li>
+                                <li><a href="/me/bookmarks"><i class="far fa-bookmark"></i></a></li>
+                                <li><a href="/logout"><i class="fas fa-sign-out-alt"></i></a></li>
+                                <!-- <li><a href="/me/settings"><i class="fas fa-cog"></i></a></li> -->
+                                {% else %}
+                                <li><a href="/login" class="btn btn-primary">Login</a></li>
+                                <li><a href="/register" class="btn btn-primary">Register</a></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <ul class="js-clone-nav d-none d-lg-inline-none text-start site-menu float-end">
+                    <a class="logo m-0 text-uppercase" id="comments-number"></a><br> {% if request.user.is_authenticated %}
+                    <li id="comment-form" style="display: flex;">
+                        <input type="search" class="form-control" placeholder="Tell us what you think..." style="flex:1" id="comment-input">
+                        <a id="comment-button" style="cursor: pointer; margin-top: 5px;"><i class="far fa-paper-plane" onclick="write_comment('{{post.id}}')"></i></a>
+                    </li><br><br><br> {% else %}
+                    <a href="/login" class="logo m-0 text-uppercase"> Login to comment</a><br> {% endif %}
+                    <li id="comments">
+                    </li>
+                    <div class="modal__container" id="modal-container">
+                        <div class="modal__content">
+
+                            <a id="modal-user-a">
+                                <h1 class="modal__title" id="modal-user" style="text-decoration: none;"></h1>
+                            </a><br>
+                            <!-- <p class="modal__description" id="delete-post-heading">Click the button to close</p> -->
+                            <div id="report-container">
+
+                            </div>
+
+                            <div id="delete-container">
+                            </div>
+                            <input type="hidden" id="delete_id">
+
+                            <button class="modal__button-link close-modal" id="close_button">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- <div class="notification-box flex flex-col items-center justify-center fixed w-full z-50 p-3">
+
+    </div> -->
+    <div class="section post-section pt-5">
+        <div class="container">
+            <div class="row mb-5 justify-content-center">
+                <div class="image--container text-center">
+                    <a href="/{{mee.username}}">
+                    {% if mee.image %}
+                    <img src="https://mediafiles-arpan.s3.ap-south-1.amazonaws.com/{{mee.image}}" style="width: 6em;height: 6em; border-radius: 50%; object-fit: cover;"> {% else %}
+                    <p data-letters="{{mee.first_name.0}}"></p>
+                    {% endif %}
+                </a>
+                </div>
+                <div class="d-block text-center">
+                    <a href="/{{mee.username}}" class="logo">{{mee.first_name}}</a>
+                    <span class="date d-block text-center small text-uppercase text-black-50 mb-5">{{post.created}}</span>
+                </div><br>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <h2 class="heading text-center">{{post.heading}}</h2>
+                    {% if post.caption %}
+                    <p class="lead mb-4 text-center">{{post.caption}}</p>
+                    {% endif %}
+                    <div class="d-flex">
+                        <ul class="list-unstyled social me-auto">
+                            <li>
+                                <a class="logo" id="pageload"></a>
+                            </li>
+                            <li><a class="logo" style="cursor: pointer;" id="prev-page"><i class="fas fa-backward"></i></a></li>
+                            <li>
+                                <a class="logo" id="page-num"></a>
+                            </li>
+                            <li><a class="logo" style="cursor: pointer;" id="next-page"><i class="fas fa-forward"></i></a></li>
+                            <li>
+                                <a class="logo" id="page-count"> </a>
+                            </li>
+                        </ul>
+                    </div><br>
+                    <div class="pdff">
+                        <canvas id="pdf_container" style="width: 100%;"></canvas>
+                    </div><br> {% if post.category %}
+                    <a href="/{{mee.username}}/{{post.category}}">
+                        <h2 class="logo text-center">{{post.category}}</h2>
+                    </a>
+                    {% endif %}
+                    <div class="row mt-5 pt-5 border-top">
+                        <div class="col-12 text-center">
+                            <div class="custom-pagination">
+                                <a href="/me/report/post-{{post.id}}" style="cursor: pointer;"><i class="fas fa-flag   "></i></a> {% if bookmark %}
+                                <a href="" class="active" id="bookmark-button" style="cursor: pointer;" onclick="bookmark(event, '{{post.id}}')"><i class="far fa-bookmark"></i></a> {% else %}
+                                <a href="" id="bookmark-button" style="cursor: pointer;" onclick="bookmark(event, '{{post.id}}')"><i class="far fa-bookmark"></i></a> {% endif %}
+                                <a class="site-menu-toggle js-menu-toggle d-inline-block" style="cursor: pointer;" data-toggle="collapse" data-target="#main-navbar" onclick="load_comments('{{post.id}}')"><i class="far fa-comments"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if co %}
+    <div class="section pb-0">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="heading">Related</h2>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                {% for p in posts %}
+                <div class="col-lg-12">
+                    <div class="post-entry d-md-flex small-horizontal mb-5">
+                        {% if p.thumbnail %}
+                        <div class="me-md-5 thumbnail mb-3 mb-md-0">
+                            <a href="/{{mee.username}}/{{p.heading|slugify|slice:'100'}}--p{{p.id}}"><img src="{{p.thumbnail}}" alt="Image" class="img-fluid"></a>
+                        </div>
+                        {% endif %}
+                        <div class="content">
+                            <div class="post-meta mb-3">
+                                {% if p.category %}
+                                <a href="/{{mee.username}}/{{p.category}}" class="category">{{p.category}}</a> &mdash; {% endif %}
+                                <span class="date">{{p.created}}</span>
+                            </div>
+                            <h2 class="heading">
+                                <a href="/{{mee.username}}/{{p.heading|slugify|slice:'100'}}--p{{p.id}}">{{p.heading}}</a>
+                            </h2>
+                            {% if p.caption %}
+                            <p>{{p.caption}}</p>
+                            {% endif %} {% if mee.image %}
+                            <a href="/{{mee.username}}" class="post-author d-flex align-items-center" style="padding-top: 1em;">
+                                <div class="image--container" style="float: left;">
+                                    <img src="https://mediafiles-arpan.s3.ap-south-1.amazonaws.com/{{mee.image}}" style="width: 2em;height: 2em; border-radius: 50%; object-fit: cover; margin-right: 1em;">
+                                </div>
+                                <div class="text">
+                                    <strong>{{mee.first_name}}</strong>
+                                </div>
+                            </a>
+                            {% else %}
+                            <a href="/{{mee.username}}" class="post-author d-flex align-items-center">
+                                <div class="image--container" style="float: left; margin-top: 1em;">
+                                    <p data-letters-small="{{first}}"></p>
+                                </div>
+                                <div class="text">
+                                    <strong>{{mee.first_name}}</strong>
+                                </div>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="site-footer">
+        <div class="container">
+            <div class="row justify-content-center copyright">
+                <div class="col-lg-7 text-center">
+                    <div class="widget">
+                        <p>Copyright &copy;
+                            <script>
+                                document.write(new Date().getFullYear());
+                            </script> All rights reserved
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div style="position: fixed;top: 80vh; left: 10vh;" id="notification">
+        </div>
+
+
+        <script src="{% static 'ui/js/bootstrap.bundle.min.js' %}"></script>
+        <script src="{% static 'ui/js/tiny-slider.js' %}"></script>
+        <script src="{% static 'ui/js/glightbox.min.js' %}"></script>
+        <script src="{% static 'ui/js/aos.js' %}"></script>
+        <script src="{% static 'ui/js/navbar.js' %}"></script>
+        <script src="{% static 'ui/js/custom.js' %}"></script>
+        <script src="{% static 'ui/js/jquery.js' %}"></script>
+        <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+        <script src="{% static 'modal/modal.js' %}"></script>
+        {% if request.user.is_authenticated %}
+        <script src="{% static 'ui/js/post.js' %}" user="{{request.user.id}}" pdf="https://mediafiles-arpan.s3.ap-south-1.amazonaws.com/{{post.upload}}"></script>
+        {% else %}
+        <script src="{% static 'ui/js/post.js' %}" user="no" pdf="https://mediafiles-arpan.s3.ap-south-1.amazonaws.com/{{post.upload}}"></script>
+        {% endif %}
+        <script src="{% static 'ui/js/alert.js' %}"></script>
+
+</body>
+
+</html>

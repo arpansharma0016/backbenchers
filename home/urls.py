@@ -1,0 +1,41 @@
+from django.urls import path
+from django.conf.urls.static import static
+from django.conf import settings
+from . import views
+
+urlpatterns = [
+    path('login/', views.login, name='login'),
+    path('register/', views.register, name='register'),
+    path('forgot_password/', views.forgot_password, name='forgot_password'),
+    path('confirm_email/<str:uname>/', views.confirm_email, name='confirm_email'),
+    path('resend_code/<str:uname>/', views.resend_code, name='resend_code'),
+    path('enter_otp/<str:uname>/', views.enter_otp, name='enter_otp'),
+    path('enter_otp/', views.forgot_password, name='forgot_password'),
+    path('new_password/<str:uname>/', views.new_password, name='new_password'),
+    path('resend_pass_code/<str:uname>/', views.resend_pass_code, name='resend_pass_code'),
+    path('logout/', views.logout, name='logout'),
+    path('username/', views.username, name="username"),
+    path('check_username/', views.check_username, name="check_username"),
+    path('search/', views.search, name="search"),
+    path('search/posts/', views.search_posts, name="search_posts"),
+    path('search/users/', views.search_users, name="search_users"),
+    path('me/', views.me, name="me"),
+    path('me/bookmarks/', views.bookmarks, name="bookmarks"),
+    path('me/create/', views.create, name="create"),
+    # path('me/settings/', views.settings, name="settings"),
+    path('me/save_post/', views.save_post, name="save_post"),
+    path('me/report/', views.report, name="report"),
+    path('me/report/post-<int:id>/', views.report_post, name="report_post"),
+    path('me/report/comment-<int:id>/', views.report_comment, name="report_comment"),
+    path('me/edit-<int:id>/', views.edit, name="edit"),
+    path('me/edit_post-<int:id>/', views.edit_post, name="edit_post"),
+    path('me/delete_post-<int:id>/', views.delete_post, name="delete_post"),
+    path('me/load_comments-<int:id>/', views.load_comments, name="load_comments"),
+    path('me/create_bookmark-<int:id>/', views.create_bookmark, name="create_bookmark"),
+    path('me/write_comment-<int:id>/', views.write_comment, name="write_comment"),
+    path('me/delete_comment-<int:id>-<int:post_id>/', views.delete_comment, name="delete_comment"),
+    path('', views.index, name="index"),
+    path('<str:username>/', views.user, name="user"),
+    path('<str:username>/<str:heading>--p<int:id>/', views.view_post, name="view_post"),
+    path('<str:username>/<str:category>/', views.category, name="category"),
+] 

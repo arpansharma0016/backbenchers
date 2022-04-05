@@ -1,0 +1,224 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'modal/modal.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/aos.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/bootstrap-grid.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/bootstrap-reboot.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/bootstrap-utilities.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/glightbox.min.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/tiny-slider.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/bootstrap/bootstrap-reboot.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/css/components/_site-blocks.css' %}">
+    <link rel="stylesheet" href="{% static 'ui/fonts/css/all.css' %}">
+    <link rel="icon" href="{% static 'logo.png' %}" type="image/icon type">
+
+    <title>{{mee.first_name}} &mdash; Home</title>
+    <style>
+        .inputt {
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="position: fixed;top: 80vh; left: 10vh;" id="notification">
+    </div>
+    <div class="site-mobile-menu site-navbar-target">
+        <div class="site-mobile-menu-header">
+            <div class="site-mobile-menu-close">
+                <span class="icofont-close js-menu-toggle"></span>
+            </div>
+        </div>
+        <div class="site-mobile-menu-body"></div>
+    </div>
+    <nav class="site-nav">
+        <div class="container">
+            <div class="site-navigation">
+                <div class="row">
+                    <div class="col-md-6 text-center order-1 order-md-2 mb-3 mb-md-0">
+                        <a href="/" class="logo m-0 text-uppercase">home</a>
+                    </div>
+                    <div class="col-md-3 col-sm-6 order-3 order-md-1">
+                        <form action="/search" class="search-form">
+                            <span class="icon-search2"></span>
+                            <input type="search" class="form-control" name="query" placeholder="Search...">
+                        </form>
+                    </div>
+                    <div class="col-md-3 col-sm-6 text-end order-2 order-md-3 mb-3 mb-md-0">
+                        <div class="d-flex">
+                            <ul class="list-unstyled social me-auto">
+                                <li><a href="/me"><i class="fas fa-home"></i></a></li>
+                                <li><a href="/me/create"><i class="fas fa-plus-circle"></i></a></li>
+                                <li><a href="/me/bookmarks"><i class="far fa-bookmark"></i></a></li>
+                                <li><a href="/logout"><i class="fas fa-sign-out-alt"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="section pt-5 pb-0">
+        <div class="container">
+            <div class="row mb-5 justify-content-center">
+                {% for message in messages %}
+                <div style="width: 100%; text-align: center;">
+                    <p style="color: red;">{{message}}</p>
+                </div>
+                {% endfor %}
+                <form method="POST" enctype="multipart/form-data">{% csrf_token %}
+                    <input type="file" name="image" id="image-input" style="opacity: 0;" onchange="load_image(event)">
+                    <div class="image--container text-center" id="image" onclick="document.getElementById('image-input').click()">
+                        <a href="/{{mee.username}}">
+                        {% if mee.image %}
+                        <img src="https://mediafiles-arpan.s3.ap-south-1.amazonaws.com/{{mee.image}}" style="width: 6em;height: 6em; border-radius: 50%; object-fit: cover;"> {% else %}
+                        <p data-letters="{{first}}"></p>
+                        {% endif %}
+                    </a>
+                    </div>
+                    {% if mee.first_name %}
+                    <div class="d-block text-center mb-1">
+                        <span class="logo"><input name="first_name" class="form-control" placeholder="Name" value="{{mee.first_name}}"></span>
+                    </div>
+                    {% else %}
+                    <div class="d-block text-center mb-1">
+                        <span class="logo"><input name="first_name" class="form-control" placeholder="Name"></span>
+                    </div>
+                    {% endif %} {% if mee.bio %}
+                    <div class="d-block text-center mb-1">
+                        <span class="logo"><input name="bio" class="form-control" placeholder="Bio" value="{{mee.bio}}"></span>
+                    </div>
+                    {% else %}
+                    <div class="d-block text-center">
+                        <span class="logo"><input name="bio" class="form-control" placeholder="Bio"></span>
+                    </div>
+                    {% endif %}
+                    <div class="d-block text-center" style="margin-top: 1em;">
+                        <input class="btn btn-primary" type="submit" value="Submit">
+                    </div><br>
+                </form>
+            </div>
+            {% if po %}
+            <div class="row justify-content-center">
+                {% for post in posts %}
+                <div class="col-lg-9" id="post__id-{{post.id}}">
+                    <div class="post-entry d-md-flex small-horizontal mb-5">
+                        {% if post.thumbnail %}
+                        <div class="me-md-5 thumbnail mb-3 mb-md-0">
+                            <a href="/{{mee.username}}/{{post.heading|slugify|slice:'100'}}--p{{post.id}}"><img src="{{post.thumbnail}}" alt="Image" class="img-fluid"></a>
+                        </div>
+                        {% endif %}
+                        <div class="content">
+                            <div class="post-meta mb-3">
+                                {% if post.category %}
+                                <a href="/{{mee.username}}/{{post.category}}" class="category">{{post.category|truncatechars:50}}</a> &mdash; {% endif %}
+                                <span class="date">{{post.created}}</span>
+                            </div>
+                            <h2 class="heading"><a href="/{{mee.username}}/{{post.heading|slugify|slice:'100'}}--p{{post.id}}">{{post.heading|truncatechars:100}}</a></h2>
+                            {% if post.caption %}
+                            <p>{{post.caption|truncatechars:120}}</p>
+                            {% endif %}
+                            <div class="custom-pagination">
+                                <a href="#" onclick="delete_post(event, '{{post.id}}', '{{post.heading}}')"><i class="fas fa-trash"></i></a>
+                                <a href="/me/edit-{{post.id}}"><i class="fas fa-pen"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="row mb-5 justify-content-center">
+                <div class="d-block text-center">
+                    <span class="logo">No Posts yet!</span>
+                </div><br>
+            </div>
+            {% endif %}
+            <!-- <div class="row align-items-center justify-content-center py-5">
+                <div class="col-lg-6 text-center">
+                    <div class="custom-pagination">
+                        <a href="#">1</a>
+                        <a href="#" class="active">2</a>
+                        <a href="#">3</a>
+                        <a href="#">4</a>
+                        <a href="#">5</a>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </div>
+    <!-- <div class="py-5 bg-light mx-md-3 sec-subscribe">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="h4 fw-bold">Subscribe to newsletter</h2>
+                </div>
+            </div>
+            <form action="" class="row">
+                <div class="col-md-8">
+                    <div class="mb-3 mb-md-0">
+                        <input type="email" class="form-control" placeholder="Enter your email">
+                    </div>
+                </div>
+                <div class="col-md-4 d-grid">
+                    <input type="submit" class="btn btn-primary" value="Subscribe">
+                </div>
+            </form>
+        </div>
+    </div> -->
+    <div class="site-footer">
+        <div class="container">
+            <div class="row justify-content-center copyright">
+                <div class="col-lg-7 text-center">
+                    <div class="widget">
+                        <p>Copyright &copy;
+                            <script>
+                                document.write(new Date().getFullYear());
+                            </script> All rights reserved
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal__container" id="modal-container">
+            <div class="modal__content">
+
+                <h1 class="modal__title">Delete Post?</h1>
+                <p class="modal__description" id="delete-post-heading">Click the button to close</p>
+
+                <button class="modal__button modal__button-width" id="delete_post_button" onclick="delete_button(event)">
+                    Delete
+                </button>
+                <input type="hidden" id="delete_id">
+
+                <button class="modal__button-link close-modal" id="close_button">
+                    Close
+                </button>
+            </div>
+        </div>
+
+        <script src="{% static 'ui/js/bootstrap.bundle.min.js' %}"></script>
+        <script src="{% static 'ui/js/tiny-slider.js' %}"></script>
+        <script src="{% static 'ui/js/glightbox.min.js' %}"></script>
+        <script src="{% static 'ui/js/aos.js' %}"></script>
+        <script src="{% static 'ui/js/navbar.js' %}"></script>
+        <script src="{% static 'ui/js/custom.js' %}"></script>
+        <script src="{% static 'ui/js/jquery.js' %}"></script>
+        <script src="{% static 'modal/modal.js' %}"></script>
+        <script src="{% static 'ui/js/me.js' %}"></script>
+
+
+</body>
+
+</html>
